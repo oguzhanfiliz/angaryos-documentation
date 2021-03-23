@@ -107,6 +107,8 @@ herhangi bir excelde bulunan datayı bu şekilde aktarıp kullanabilirsiniz.
 
 
 ### Kurulumda Karşılaşılanlar
+
+---
 **Veritabanı başlamaması**
 İçerideki datalar oluşmamış olacağından seeder işlemi yapmanız gerekir 
 
@@ -128,9 +130,11 @@ Seed işlemi laravelin bir komutudur farkettiğiniz üzere artisan ile tetiklenm
 
 ***!!! Bütün datalarınızı sileceği için çalışan sistemde denemeyiniz.***
 
+---
 **Postgres İzinleri**
 postgresql 777 izinlerine sahip değil bundan dolayı hata aldım. postgres klasörünün izinlerini değiştirmeyin değiştirirseniz silip docker'ın tekrar yüklemesini bekleyin.
 
+---
 **Log Hatası**
 
  Eğer küçük bir sunucuda çalışıyorsanız rabbitmq elasticsearch kapatmanız gerekecektir.
@@ -157,11 +161,13 @@ olarak düzeltmektir.
 
  - örnek bir senaryomuzda. Bir tablomuzun bir kolonunda dizi halinde tuttuğunuz bir dizi var ve bunlarda belirli kullanıcıların idleri olsun. 
 
+---
  **Gerçek hayat**
  - Kurumlara eğitim veren bir iş yapıyorsunuz ve kurumlar'ın çalışanları kullanıcılar tablonuzda kayıtlı olsun
  - Açacağınız eğitim tablosunda bir kolonda personellerin id'lerini tutacak ve eğitimi buradan takip edeceksiniz. 
  - Bir tablodaki bir özelliğe göre diğer kolonu update etme işlevi aşağıdaki gibidir.
 
+---
 **Step 1**
 
  ```
@@ -169,6 +175,8 @@ olarak düzeltmektir.
 
  ```
  komutuyla önce bir laravel'den tarihimizi isteyelim çünkü her tablo için updated_at kolonu siz oluşturmasanızda otomatik oluşacaktır.
+ 
+---
 **Step 2**
 
  Daha sonra tablomuzu bir çekelim
@@ -180,6 +188,7 @@ Daha sonra a firmasının kullanıcılarını bu gruplar tablosundaki personel i
        ``` $user = DB::table('users')->where('kurum_id', 23)->get(); ```     
 user tablosunda ki kurum_id'si 23 olan kullanıcıları aldık.
 
+---
 **Step 3**
 
 boş bir id dizisi oluşturuyorum ve datalarımı şu  şekle çevirmek için string casting uygulayacağım 
@@ -199,6 +208,7 @@ ids dizimiz artık bu formattadır
 *["123","123","123"]*
 
 
+---
 **Step 4**
 Artık güncelleme işlemini gerçekleştirebiliriz.
 Güncellememiz gereken 3 kolon bulunmakta 
@@ -253,6 +263,7 @@ Tüm kodları şu şekilde görebilirsiniz.
 
 
 
+---
 #### Excel dosyasından kullanıcı gruplarına
 
 **Açıklama Eklenecektir**
@@ -296,3 +307,4 @@ Tüm kodları şu şekilde görebilirsiniz.
 
 ```
 
+---
