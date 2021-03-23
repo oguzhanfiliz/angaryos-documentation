@@ -150,3 +150,149 @@ LOG_CHANNEL=daily
 ```
 
 olarak düzeltmektir.
+
+
+### Custom Kodlar
+
+
+ - örnek bir senaryomuzda. Bir tablomuzun bir kolonunda dizi halinde tuttuğunuz bir dizi var ve bunlarda belirli kullanıcıların idleri olsun. 
+
+ **Gerçek hayat**
+ - Kurumlara eğitim veren bir iş yapıyorsunuz ve kurumlar'ın çalışanları kullanıcılar tablonuzda kayıtlı olsun
+ - Açacağınız eğitim tablosunda bir kolonda personellerin id'lerini tutacak ve eğitimi buradan takip edeceksiniz. 
+ - Bir tablodaki bir özelliğe göre diğer kolonu update etme işlevi aşağıdaki gibidir.
+
+**Step 1**
+
+ ```
+        $n = \Carbon\Carbon::now();
+
+ ```
+ komutuyla önce bir laravel'den tarihimizi isteyelim çünkü her tablo için updated_at kolonu siz oluşturmasanızda otomatik oluşacaktır.
+**Step 2**
+
+ Daha sonra tablomuzu bir çekelim
+        ```$grup = DB::table('kullanici_gruplari')->where('id',145)->get();        ```
+Burada kullanici_gruplari tablosundan id'si 145 olan kaydımızı $grup değişkenine atadık ileride işlev göreceğiz. 
+
+Daha sonra a firmasının kullanıcılarını bu gruplar tablosundaki personel id kolonuna eklemek istiyorsunuz bunun için user tablosundan kurumun kayıtlarını alalım.
+
+       ``` $user = DB::table('users')->where('kurum_id', 23)->get(); ```     
+user tablosunda ki kurum_id'si 23 olan kullanıcıları aldık.
+
+**Step 3**
+
+boş bir id dizisi oluşturuyorum ve datalarımı şu  şekle çevirmek için string casting uygulayacağım 
+
+**["123","123","123"]**
+
+ve grup değişkenindeki tüm datayı gezerek ids dizisine ekleme yapacağım daha sonra dizimi json haline çevireceğim
+
+``` 
+   foreach ($gr as $key => $value) {
+            array_push($ids, (string)$value->id);
+        }
+        $jsn= json_encode($ids);
+
+```
+ids dizimiz artık bu formattadır 
+*["123","123","123"]*
+
+
+**Step 4**
+Artık güncelleme işlemini gerçekleştirebiliriz.
+Güncellememiz gereken 3 kolon bulunmakta 
+
+- personel_ids
+- user_id
+- updated_at
+
+bunlar tabiki sizin tablonuza göre değişiklik gösterecektir ancak bizim senaryomuzda bu şekilde güncelleme işi için laravelin sabit fonksiyonunu kullanacağız bir güncelleme yapacağımız diziyi göndermemiz yeterli
+
+
+```
+     $update =
+                     [
+                          'personel_ids' => $jsn,
+                          'user_id' => ROBOT_USER_ID,/
+                          'updated_at' => $n
+                      ];
+        
+                      DB::table('kullanici_gruplari')->where('id', 54)->update($update);
+```
+
+
+Tüm kodları şu şekilde görebilirsiniz.
+
+
+
+```
+
+  $n = \Carbon\Carbon::now();
+        $grup = DB::table('kullanici_gruplari')->where('id',54)->get();        
+          //gelen verileri stringe cast edip json string  haline gelmesini sağlıyoruz.
+        $gr = DB::table('users')->where('kurum_id', 23)->get();
+        $ids = [];
+        foreach ($tapu as $key => $value) {
+            array_push($ids, (string)$value->id);
+        }
+        $jsn= json_encode($ids);
+        $update =
+                     [
+                          'personel_ids' => $jsn,
+                          'user_id' => ROBOT_USER_ID,/
+                          'updated_at' => $n
+                      ];
+        
+                      DB::table('kullanici_gruplari')->where('id', 54)->update($update);
+        
+        dd($jsn);
+
+
+```
+
+
+
+#### Excel dosyasından kullanıcı gruplarına
+
+**Açıklama Eklenecektir**
+```
+        $n = \Carbon\Carbon::now();
+        $kontrol = DB::table('kullanici_gruplari')->where('id','53')->get();
+        $data = helper('get_data_from_excel_file', '/var/www/public/genc.xlsx');
+        $dataa = $data['Sayfa1']['data'];
+        $ids = [];
+
+        foreach ($dataa as $key => $value) {
+            if($value['T.C']!==null){
+            array_push($ids, trim((string)$value['T.C']));
+            }
+        }
+        $personelId = [];
+        $genclikUserControl = DB::table('users')->where('kurum_id', '12')->get();
+        foreach($genclikUserControl as $item){
+            if(in_array($item->tc,$ids)){
+              array_push($personelId, trim((string)$item->id));
+            }
+        }
+        $personelIdjs = json_encode($personelId);
+            $update =
+                     [
+                         'personel_ids' => $personelIdjs,
+                         'user_id' => ROBOT_USER_ID,
+                         'updated_at' => $n
+                     ];
+        
+                     DB::table('kullanici_gruplari')->where('id', 53)->update($update);
+             
+
+
+    
+
+
+
+        dd($personelIdjs);
+
+
+```
+
