@@ -1,3 +1,7 @@
+# Linux
+
+
+---
 # Angaryos Genel Mantığı
 **Genel amaçlı yazılım angaryalarından kurtarmak üzere hazırlanmış bir framework'tür angaryos.**
 
@@ -306,5 +310,40 @@ Tüm kodları şu şekilde görebilirsiniz.
 
 
 ```
+
+---
+# Windows
+
+Windows'da angaryosu kullanabilmeniz için wsl ve docker kurmanız gerekiyor bunlar için ayrıca bknz [wsl](https://www.windowscentral.com/install-windows-subsystem-linux-windows-10) [docker](https://docs.docker.com/docker-for-windows/install/)
+
+Kurduktan sonra bir adet ubuntu'yu mağazınızdan indirerek işlemlere başlayabilirsiniz. İleride ihtiyacınız olabilicek faydalı bir link openssh linkini bırakıyorum [openssh](https://www.illuminiastudios.com/dev-diaries/ssh-on-windows-subsystem-for-linux/)
+
+
+---
+**Angaryos kurulumu**
+
+Aslında bu iki bileşeni kurduktan sonra linux bir makineye sahip olduğunuz için linux komutlarının aynıları kullanılabilir. 
+
+*Faydalı komutlar* 
+``` 
+ip addr /* ip  adresinizi öğrenmek için
+chmod -R 777 ./angaryos-stack/backend/.env
+chmod -R 777 ./angaryos-stack/frontend/src/environments/environments.prod.ts
+chmod -R 777 ./angaryos-stack/frontend/src/environments/environments.ts
+ ```
+ - ip adresinizi eth0 altından öğrenebilirsiniz ve diğer satırlara okuma yazma izni verip vscode ile bağlanabilirsiniz tabiki bir [openssh](https://www.illuminiastudios.com/dev-diaries/ssh-on-windows-subsystem-for-linux/) bağlantısına ihtiyaç duyacaksınız. 
+ 
+ - Ubuntu penceremizden gerekli klasörlere giderek 
+ - - .env'de
+ - - - APP_URL 
+ - - environments.prod.ts && environments.ts'de 
+ - - - host
+
+ kısımlarını kendi ipnize configüre edebilirsiniz.
+
+ - Portainer (9000 portunda) kullanıp yada docker container'ınızdan laravel cli'na girip php artisan db:seed yapmayı unutmayın!
+
+https://ipadresiniz'den angaryos'a erişebilirsiniz.
+
 
 ---
